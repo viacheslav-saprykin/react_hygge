@@ -3,17 +3,37 @@ import './App.css';
 
 const API_BASE_URL = 'http://localhost:3010';
 
+const ProductImage = ({ src, alt, className }) => {
+  const [imageError, setImageError] = useState(false);
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  if (imageError) {
+    return (
+      <div className={`${className} image-placeholder`}>
+        <span>No Image</span>
+      </div>
+    );
+  }
+
+  return (
+    <img src={src} alt={alt} className={className} onError={handleImageError} />
+  );
+};
+
 function App() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   // Filter states
   const [tagFilter, setTagFilter] = useState('');
   const [priceFilter, setPriceFilter] = useState('');
   const [subscriptionFilter, setSubscriptionFilter] = useState('');
-  
+
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
@@ -32,7 +52,7 @@ function App() {
       }
       const data = await response.json();
       // Filter only published products
-      const publishedProducts = data.filter(product => product.published);
+      const publishedProducts = data.filter((product) => product.published);
       setProducts(publishedProducts);
       setFilteredProducts(publishedProducts);
     } catch (err) {
@@ -48,24 +68,45 @@ function App() {
 
     // Tag filter
     if (tagFilter) {
-      filtered = filtered.filter(product =>
-        product.tags.some(tag => 
+      filtered = filtered.filter((product) =>
+        product.tags.some((tag) =>
           tag.toLowerCase().includes(tagFilter.toLowerCase())
         )
       );
     }
 
-    // Price filter
+    // Price filter - комбінована версія
+    // Price filter - розумна версія
     if (priceFilter) {
-      filtered = filtered.filter(product =>
-        product.price.toString().includes(priceFilter)
-      );
+      const filterValue = priceFilter.trim();
+      const numericFilter = parseFloat(filterValue);
+
+      filtered = filtered.filter((product) => {
+        // Спочатку перевіряємо точну числову відповідність з більшою толерантністю
+        if (!isNaN(numericFilter)) {
+          // Якщо різниця менше 0.1 (10 центів) - вважаємо збігом
+          if (Math.abs(product.price - numericFilter) < 0.1) {
+            return true;
+          }
+
+          // Також перевіряємо округлення до найближчого цілого
+          if (Math.round(product.price) === numericFilter) {
+            return true;
+          }
+        }
+
+        // Потім перевіряємо, чи починається ціна з введеного значення
+        const priceString = product.price.toString();
+        return priceString.startsWith(filterValue);
+      });
     }
 
     // Subscription filter
     if (subscriptionFilter) {
       const isSubscription = subscriptionFilter.toLowerCase() === 'yes';
-      filtered = filtered.filter(product => product.subscription === isSubscription);
+      filtered = filtered.filter(
+        (product) => product.subscription === isSubscription
+      );
     }
 
     setFilteredProducts(filtered);
@@ -75,7 +116,10 @@ function App() {
   // Pagination logic
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   const clearFilters = () => {
@@ -99,7 +143,7 @@ function App() {
         {/* Filters Sidebar */}
         <aside className="filters-sidebar">
           <h2>Filters</h2>
-          
+
           <div className="filter-group">
             <label htmlFor="tag-filter">Search by Tag:</label>
             <input
@@ -140,7 +184,9 @@ function App() {
           </button>
 
           <div className="filter-summary">
-            <p>Showing {filteredProducts.length} of {products.length} products</p>
+            <p>
+              Showing {filteredProducts.length} of {products.length} products
+            </p>
           </div>
         </aside>
 
@@ -166,11 +212,11 @@ function App() {
                     </tr>
                   </thead>
                   <tbody>
-                    {currentProducts.map(product => (
+                    {currentProducts.map((product) => (
                       <tr key={product.id}>
                         <td>
-                          <img 
-                            src={product.image_src} 
+                          <ProductImage
+                            src={product.image_src}
                             alt={product.title}
                             className="product-image"
                           />
@@ -184,28 +230,40 @@ function App() {
                         </td>
                         <td>
                           <div className="tags">
-                            {product.tags.map(tag => (
-                              <span key={tag} className="tag">{tag}</span>
+                            {product.tags.map((tag) => (
+                              <span key={tag} className="tag">
+                                {tag}
+                              </span>
                             ))}
                           </div>
                         </td>
                         <td className="price">
                           ${product.price.toFixed(2)}
-                          {product.subscription && product.subscription_discount && (
-                            <div className="subscription-discount">
-                              -{product.subscription_discount}% with subscription
-                            </div>
-                          )}
+                          {product.subscription &&
+                            product.subscription_discount && (
+                              <div className="subscription-discount">
+                                -{product.subscription_discount}% with
+                                subscription
+                              </div>
+                            )}
                         </td>
                         <td>
-                          <span className={`subscription-badge ${product.subscription ? 'available' : 'not-available'}`}>
-                            {product.subscription ? 'Available' : 'Not Available'}
+                          <span
+                            className={`subscription-badge ${
+                              product.subscription
+                                ? 'available'
+                                : 'not-available'
+                            }`}
+                          >
+                            {product.subscription
+                              ? 'Available'
+                              : 'Not Available'}
                           </span>
                         </td>
                         <td>
-                          <a 
-                            href={product.url} 
-                            target="_blank" 
+                          <a
+                            href={product.url}
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="view-product-btn"
                           >
@@ -221,28 +279,36 @@ function App() {
               {/* Pagination */}
               {totalPages > 1 && (
                 <div className="pagination">
-                  <button 
-                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  <button
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(prev - 1, 1))
+                    }
                     disabled={currentPage === 1}
                     className="pagination-btn"
                   >
                     Previous
                   </button>
-                  
+
                   <div className="page-numbers">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                      <button
-                        key={page}
-                        onClick={() => setCurrentPage(page)}
-                        className={`page-number ${currentPage === page ? 'active' : ''}`}
-                      >
-                        {page}
-                      </button>
-                    ))}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (page) => (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className={`page-number ${
+                            currentPage === page ? 'active' : ''
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      )
+                    )}
                   </div>
 
-                  <button 
-                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  <button
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                    }
                     disabled={currentPage === totalPages}
                     className="pagination-btn"
                   >

@@ -20,7 +20,7 @@ body {
 
 /* Header */
 .app-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(5deg, #172d90 0%, #a67dcf 100%);
   color: white;
   padding: 2rem 0;
   text-align: center;
@@ -91,7 +91,7 @@ body {
 .filter-group input:focus,
 .filter-group select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #172d90;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
@@ -212,6 +212,27 @@ tr:hover {
   color: #999;
 }
 
+.image-placeholder {
+  width: 80px;
+  height: 80px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  font-size: 10px;
+  text-align: center;
+}
+
+.product-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
 /* Product Info */
 .product-info h4 {
   color: #333;
@@ -281,7 +302,7 @@ tr:hover {
 
 /* View Product Button */
 .view-product-btn {
-  background: #667eea;
+  background: #172d90;
   color: white;
   padding: 0.5rem 1rem;
   text-decoration: none;
@@ -320,9 +341,9 @@ tr:hover {
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background: #667eea;
+  background: #172d90;
   color: white;
-  border-color: #667eea;
+  border-color: #172d90;
 }
 
 .pagination-btn:disabled {
@@ -354,9 +375,9 @@ tr:hover {
 }
 
 .page-number.active {
-  background: #667eea;
+  background: #172d90;
   color: white;
-  border-color: #667eea;
+  border-color: #172d90;
 }
 
 /* Responsive Design */
