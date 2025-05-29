@@ -75,27 +75,24 @@ function App() {
       );
     }
 
-    // Price filter - комбінована версія
-    // Price filter - розумна версія
+    // Price filter
     if (priceFilter) {
       const filterValue = priceFilter.trim();
       const numericFilter = parseFloat(filterValue);
 
       filtered = filtered.filter((product) => {
-        // Спочатку перевіряємо точну числову відповідність з більшою толерантністю
         if (!isNaN(numericFilter)) {
-          // Якщо різниця менше 0.1 (10 центів) - вважаємо збігом
+          // If the difference is less than 10 cents, we consider it a coincidence
           if (Math.abs(product.price - numericFilter) < 0.1) {
             return true;
           }
 
-          // Також перевіряємо округлення до найближчого цілого
           if (Math.round(product.price) === numericFilter) {
             return true;
           }
         }
 
-        // Потім перевіряємо, чи починається ціна з введеного значення
+        // Then check if the price starts with the entered value
         const priceString = product.price.toString();
         return priceString.startsWith(filterValue);
       });
