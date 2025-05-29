@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/viacheslav-saprykin/react_hygge/static/css/main.183b46ce.css",
-    "main.js": "/viacheslav-saprykin/react_hygge/static/js/main.79073e09.js",
-    "static/js/453.60562097.chunk.js": "/viacheslav-saprykin/react_hygge/static/js/453.60562097.chunk.js",
-    "index.html": "/viacheslav-saprykin/react_hygge/index.html",
-    "main.183b46ce.css.map": "/viacheslav-saprykin/react_hygge/static/css/main.183b46ce.css.map",
-    "main.79073e09.js.map": "/viacheslav-saprykin/react_hygge/static/js/main.79073e09.js.map",
-    "453.60562097.chunk.js.map": "/viacheslav-saprykin/react_hygge/static/js/453.60562097.chunk.js.map"
+    "main.css": "/react_hygge/static/css/main.183b46ce.css",
+    "main.js": "/react_hygge/static/js/main.21271772.js",
+    "static/js/453.60562097.chunk.js": "/react_hygge/static/js/453.60562097.chunk.js",
+    "index.html": "/react_hygge/index.html",
+    "main.183b46ce.css.map": "/react_hygge/static/css/main.183b46ce.css.map",
+    "main.21271772.js.map": "/react_hygge/static/js/main.21271772.js.map",
+    "453.60562097.chunk.js.map": "/react_hygge/static/js/453.60562097.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.183b46ce.css",
-    "static/js/main.79073e09.js"
+    "static/js/main.21271772.js"
   ]
 }
